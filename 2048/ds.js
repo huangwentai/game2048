@@ -11,19 +11,23 @@ $(document).ready(function() {
 	}
 	var control = navigator.control || {};if (control.gesture) { control.gesture(false);}
 	//产生两个随机数
-	var guess=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
-	var what=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
-	var first=0,dout=0,rdc=0,second=0;
+	var guess=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];//改变后的数组
+	var what=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];//前一个数组
+	var first=0,//滑动的次数
+		dout=0,//判断有没有空位
+		rdc=0,//数字是多少
+		second=0;//判断相连的两个数字是否相同
 	function randomtwo(){
 		dout=0;
 		second=0;
+		//是否达到了2048，达到则成功
 		for(i=0;i<4;i++){
 			for(j=0;j<4;j++){
 				if(guess[i][j]=="0"){first=0;}
                 if(guess[i][j]=="2048"){alert("you win!!!!!");}				
 			}
 		}
-		
+		//生成一个新数字
 		while(first<1){
 	       var rdx=Math.ceil(Math.random()*4)-1;	
 		   var rdy=Math.ceil(Math.random()*4)-1;
@@ -34,6 +38,7 @@ $(document).ready(function() {
 				$(".ds"+rdx+""+rdy).attr("id","d"+rdc);
 			first ++;}
 	    }
+	    //判断是否还有空位和相邻的两个数是不是相同，都不符合则提示失败
 		for(i=0;i<4;i++){
 			for(j=0;j<3;j++){
 				if(guess[i][j]=="0"||guess[i][j+1]=="0"){dout=1;}
@@ -45,15 +50,15 @@ $(document).ready(function() {
 	}
 	//初始化	
 	while(first<2){
-	       var rdx=Math.ceil(Math.random()*4)-1;	
-		   var rdy=Math.ceil(Math.random()*4)-1;
-		   if(Math.ceil(Math.random()*8)==4){rdc=4}else rdc=2;
-			if(guess[rdx][rdy]=="0"){
-				guess[rdx][rdy]=rdc;
-			    $(".ds"+rdx+""+rdy).text(rdc);
-				$(".ds"+rdx+""+rdy).attr("id","d"+rdc);
-			first ++;}
-	    }
+       var rdx=Math.ceil(Math.random()*4)-1;	
+	   var rdy=Math.ceil(Math.random()*4)-1;
+	   if(Math.ceil(Math.random()*8)==4){rdc=4}else rdc=2;
+		if(guess[rdx][rdy]=="0"){
+			guess[rdx][rdy]=rdc;
+		    $(".ds"+rdx+""+rdy).text(rdc);
+			$(".ds"+rdx+""+rdy).attr("id","d"+rdc);
+		first ++;}
+    }
     
 	$(".left").click(function(){
         to_left();
@@ -74,7 +79,7 @@ $(document).ready(function() {
 				if(what[i][j] != guess[i][j]){					
 					randomtwo();
 				    break;
-					}
+				}
 			}
 		}
 	}
@@ -313,47 +318,43 @@ $(document).ready(function() {
 	
 	
 	var startX,//触摸时的坐标
-            startY,
-             x, //滑动的距离
-             y,
-             aboveY=0; //设一个全局变量记录上一次内部块滑动的位置 
+        startY,
+        x, //滑动的距离
+        y,
+        aboveY=0; //设一个全局变量记录上一次内部块滑动的位置 
 
-         var inner=document.getElementById("inner");
-         
-            function touchSatrt(e){//触摸
-                e.preventDefault();
-                var touch=e.touches[0];
-				startX = touch.pageX;
-                startY = touch.pageY;   //刚触摸时的坐标              
-            }
+    var inner=document.getElementById("inner");
+     
+    function touchSatrt(e){//触摸
+        e.preventDefault();
+        var touch=e.touches[0];
+		startX = touch.pageX;
+        startY = touch.pageY;   //刚触摸时的坐标              
+    }
 
-            function touchMove(e){//滑动          
-                 e.preventDefault();        
-                 var  touch = e.touches[0];               
-                 y = touch.pageY - startY;//滑动的距离
-				  x = touch.pageX - startX;//滑动的距离
-                //inner.style.webkitTransform = 'translate(' + 0+ 'px, ' + y + 'px)';  //也可以用css3的方式     
-               // inner.style.top=aboveY+y+"px"; //这一句中的                          
-            }  
+    function touchMove(e){//滑动          
+         e.preventDefault();        
+         var  touch = e.touches[0];               
+         y = touch.pageY - startY;//滑动的距离
+		  x = touch.pageX - startX;//滑动的距离
+        //inner.style.webkitTransform = 'translate(' + 0+ 'px, ' + y + 'px)';  //也可以用css3的方式     
+       // inner.style.top=aboveY+y+"px"; //这一句中的                          
+    }  
 
-            function touchEnd(e){//手指离开屏幕
-              e.preventDefault();                   
-              if(y>100&&x<50&&x>-50) 
- 			   to_down();
-             //    alert(y+"px"+x+"px");
- 				 if(y<-100&&x<50&&x>-50)
- 				//	alert(y+"px"+x+"px");
- 					 to_up();
- 				 if(x>100&&y<50&&y>-50)
- 				//	alert(y+"px"+x+"px");
- 			 to_right();
- 				 if(x<-100&&y<50&&y>-50)
- 				//	alert(y+"px"+x+"px");
- 					 to_left();
-            }
-             document.getElementById("ds2048").addEventListener('touchstart', touchSatrt,false);  
-             document.getElementById("ds2048").addEventListener('touchmove', touchMove,false);  
-             document.getElementById("ds2048").addEventListener('touchend', touchEnd,false);  
+    function touchEnd(e){//手指离开屏幕
+      	e.preventDefault();                   
+      	if(y>100&&x<50&&x>-50) 
+	   		to_down();
+		if(y<-100&&x<50&&x>-50)
+			 to_up();
+		if(x>100&&y<50&&y>-50)
+	 		to_right();
+		if(x<-100&&y<50&&y>-50)
+			 to_left();
+    }
+    document.getElementById("ds2048").addEventListener('touchstart', touchSatrt,false);  
+    document.getElementById("ds2048").addEventListener('touchmove', touchMove,false);  
+    document.getElementById("ds2048").addEventListener('touchend', touchEnd,false);  
 });
 
 
