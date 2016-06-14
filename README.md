@@ -158,3 +158,6 @@ function randomtwo(){
 	if(dout==0&&second==0){alert("you game over!!");return 0;}
 }
 ````
+
+##然后加上触发的事件
+```javascript
