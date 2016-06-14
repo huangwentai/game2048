@@ -161,3 +161,81 @@ function randomtwo(){
 
 ##然后加上触发的事件
 ```javascript
+//判断当event.keyCode 为37时（即左方面键），执行函数to_left(); 
+//判断当event.keyCode 为39时（即右方面键），执行函数to_right(); 
+//判断当event.keyCode 为38时（即左方面键），执行函数to_up(); 
+//判断当event.keyCode 为40时（即右方面键），执行函数to_down(); 
+if(event.keyCode == 37){ 
+   to_left(); 
+}else if (event.keyCode == 39){  
+   to_right(); 
+}else if (event.keyCode == 38){ 
+   to_up(); 
+}else if (event.keyCode == 40){ 
+   to_down();  
+}
+
+//点击事件
+$(".left").click(function(){
+	to_left();
+});	
+$(".right").click(function(){
+	 to_right();
+});	
+$(".up").click(function(){
+	to_up();
+});	
+$(".down").click(function(){
+	to_down();
+});
+
+//手指滑动事件
+var startX,//触摸时的坐标
+startY,
+x, //滑动的距离
+y,
+aboveY=0; //设一个全局变量记录上一次内部块滑动的位置 
+
+var inner=document.getElementById("inner");
+
+function touchSatrt(e){//触摸
+e.preventDefault();
+var touch=e.touches[0];
+	startX = touch.pageX;
+startY = touch.pageY;   //刚触摸时的坐标              
+}
+
+function touchMove(e){//滑动          
+ e.preventDefault();        
+ var  touch = e.touches[0];               
+ y = touch.pageY - startY;//滑动的距离
+	  x = touch.pageX - startX;//滑动的距离
+//inner.style.webkitTransform = 'translate(' + 0+ 'px, ' + y + 'px)';  //也可以用css3的方式     
+// inner.style.top=aboveY+y+"px"; //这一句中的                          
+}  
+
+function touchEnd(e){//手指离开屏幕
+      e.preventDefault();                   
+      if(y>100&&x<50&&x>-50) 
+   		to_down();
+	if(y<-100&&x<50&&x>-50)
+		 to_up();
+	if(x>100&&y<50&&y>-50)
+ 		to_right();
+	if(x<-100&&y<50&&y>-50)
+		 to_left();
+}
+document.getElementById("ds2048").addEventListener('touchstart', touchSatrt,false);  
+document.getElementById("ds2048").addEventListener('touchmove', touchMove,false);  
+document.getElementById("ds2048").addEventListener('touchend', touchEnd,false); 
+````
+
+##自适应手机屏幕
+用js去改变css3放大
+```javascript
+var width=$(window).width();
+$(".ds2048").css("-webkit-transform","scale("+width/450+")");
+````
+
+##最后
+一个2048的游戏就这样完成了，第一次写是很粗糙的，也没有改进过这个代码游戏，我觉得还是挺适合新手去看的，面向过程的代码，一步到下一步
