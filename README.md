@@ -3,7 +3,7 @@
 
 ##主要html代码布局
 id和class调转使用了，不要注意这个细节，没有用id做事件，只是用来当样式
-```javascript
+```html
 <div class="ds2048">
 	<div class="ds00" id="d0"></div>
 	<div class="ds01" id="d0"></div>
