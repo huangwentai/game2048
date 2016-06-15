@@ -38,7 +38,7 @@ var first=0,//滑动的次数
 ````
 
 ##初始化
-生成两个两个数字
+生成两个数字
 ```javascript
 while(first<2){
 var rdx=Math.ceil(Math.random()*4)-1;	
